@@ -4,6 +4,13 @@ export default {
         {
             file: './dist/mini-vue.esm.js',
             format: 'esm',
+            sourcemap: true
+        },
+        {
+            file: './dist/mini-vue.umd.js',
+            format: 'umd',
+            sourcemap: true,
+            name: 'MiniVue',
         }
     ]
 }
