@@ -128,6 +128,12 @@ function transformElement(node, context) {
     const props = node.props
     const children = node.children
 
+    node.props.forEach(prop => {
+      if (!prop.isStatic) {
+        prop.value = `_ctx.${prop.value}`
+      }
+    })
+
     node.codegenNode = createVNodeCall(context, tag, props, children)
 
     // 1. 创建 h 调用函数

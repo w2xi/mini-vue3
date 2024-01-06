@@ -48,7 +48,7 @@ function mount(vnode, container) {
       }
   }
   if (Array.isArray(vnode.children)) {
-    if (vnode.children.length === 1 && typeof vnode.children[0] === 'string') {
+    if (vnode.children.length === 1 && typeof vnode.children[0] != 'object') {
       el.textContent = vnode.children[0]
     } else {
       vnode.children.forEach(child => {

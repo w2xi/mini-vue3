@@ -112,7 +112,7 @@ function genProps(props, context) {
     const value = prop ? prop.value : prop
     push(JSON.stringify(key))
     push(': ')
-    push(JSON.stringify(value))
+    push(prop.isStatic ? JSON.stringify(value) : value)
 
     if (i < props.length - 1) {
       push(', ')

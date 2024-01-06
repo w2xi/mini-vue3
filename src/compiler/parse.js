@@ -150,13 +150,20 @@ function parseAttributes(context) {
 
   // example: id="foo" class="bar"></div>
   while (!context.source.startsWith('>') && !context.source.startsWith('/>')) {
-    const match = /(\w+)=/.exec(context.source)
+    const match = /([\w:-@]+)=/.exec(context.source)
     // 属性名称
-    const name = match[1]
+    let name = match[1]
     // 移除 id
     advanceBy(name.length)
     // 移除 =
     advanceBy(1)
+
+    let isStatic = true
+    if (name.startsWith('@')) { // @click -> onClick
+      isStatic = false 
+      const eventName = name.slice(1)
+      name = 'on' + eventName[0].toUpperCase() + eventName.slice(1)
+    }
 
     let value = ''
 
@@ -177,7 +184,8 @@ function parseAttributes(context) {
     props.push({
       type: 'Attribute',
       name,
-      value
+      value,
+      isStatic,
     })
   }
 
