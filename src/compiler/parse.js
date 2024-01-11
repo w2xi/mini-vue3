@@ -86,6 +86,12 @@ function parseInterpolation(context) {
   }
 }
 
+/**
+ * 解析元素
+ * @param {*} context 
+ * @param {*} ancestors 
+ * @returns 
+ */
 function parseElement(context, ancestors) {
   // 解析开始标签
   // <div></div>
@@ -105,6 +111,12 @@ function parseElement(context, ancestors) {
   return element
 }
 
+/**
+ * 解析标签
+ * @param {*} context 
+ * @param {*} type 
+ * @returns 
+ */
 function parseTag(context, type = 'start') {
   const { source, advanceBy, advanceSpaces } = context
   // <div></div>
@@ -192,6 +204,16 @@ function parseAttributes(context) {
   return props
 }
 
+/**
+ * 解析文本
+ * @param {*} context 
+ * @returns 
+ * @examples
+ * 
+ * case 1: template</div>
+ * case 2: template {{ msg }}</div>
+ * ...
+ */
 function parseText(context) {
   let endIndex = context.source.length
   const ltIndex = context.source.indexOf('<')
@@ -214,7 +236,11 @@ function parseText(context) {
   }
 }
 
-// 是否解析结束
+/**
+ * 是否解析结束
+ * @param {*} context 
+ * @param {*} ancestors 
+ */
 function isEnd(context, ancestors) {
   if (!context.source) return true
   // 与节点栈内全部的节点比较

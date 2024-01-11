@@ -1,40 +1,36 @@
-import { compileToFunction } from './compile.js'
+import { compileToFunction } from '../compiler/compile.js'
 import { effect } from '../reactivity/effect.js'
 import { proxyRefs } from '../reactivity/ref.js'
 import { h } from './h.js'
-
-let _mount = mount
+import { isString } from "../utils/index.js"
 
 export function createApp(options = {}) {
-  function $mount(container) {
-    let template = ''
-    if (typeof container === 'string') {
-      template = document.querySelector(container).innerHTML
-      container = document.querySelector(container)
-    } else {
-      template = container.innerHTML
-    }
-    const render = compileToFunction(template)
-    const setupFn = options.setup || noop
-    const data = proxyRefs(setupFn())
+  const app = {
+    mount(container) {
+      if (isString(container)) {
+        container = document.querySelector(container)
+      }
+      const template = container.innerHTML
+      const render = compileToFunction(template)
+      const setupFn = options.setup || noop
+      const data = proxyRefs(setupFn())
 
-    const reload = () => {
-      const vnode = render(data, { h, _toDisplayString: function toString(val) { return val && val.toString() } })      
-      container.innerHTML = ''
-      _mount(vnode, container)  
-    }
+      const reload = () => {
+        const vnode = render(data, { h, _toDisplayString: function toString(val) { return val && val.toString() } })      
+        container.innerHTML = ''
+        _mount(vnode, container)
+      }
 
-    effect(() => {
-      reload()
-    })
+      effect(() => {
+        reload()
+      })
+    }
   }
-  
-  return {
-    mount: $mount,
-  }
+
+  return app
 }
 
-function mount(vnode, container) {
+function _mount(vnode, container) {
   const el = document.createElement(vnode.tag)
 
   if (vnode.props) {
@@ -52,7 +48,7 @@ function mount(vnode, container) {
       el.textContent = vnode.children[0]
     } else {
       vnode.children.forEach(child => {
-          mount(child, el)
+          _mount(child, el)
       })
     }
   } else { // string

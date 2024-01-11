@@ -29,6 +29,10 @@ export function isObject(val) {
   export function isMap(val) {
     return type(val, 'map')
   }
+
+  export function isString(val) {
+    return type(val, 'string')
+  }
   
   const toString = Object.prototype.toString
   function type(val, type) {
