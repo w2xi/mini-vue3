@@ -1,3 +1,5 @@
+import { NodeTypes } from "./ast"
+
 /**
  * 模板解析
  * @param {String} str 模板字符串
@@ -22,7 +24,7 @@ export function parse(str) {
   const nodes = parseChildren(context, [])
   // 根节点
   const root = {
-    type: 'Root',
+    type: NodeTypes.ROOT,
     children: nodes
   }
   return root
@@ -78,9 +80,9 @@ function parseInterpolation(context) {
   advanceBy(2)
 
   return {
-    type: 'Interpolation',
+    type: NodeTypes.INTERPOLATION,
     content: {
-      type: 'Expression',
+      type: NodeTypes.SIMPLE_EXPRESSION,
       content
     }
   }
@@ -139,7 +141,7 @@ function parseTag(context, type = 'start') {
   advanceBy(1)
 
   return {
-    type: 'Element',
+    type: NodeTypes.ELEMENT,
     tag,
     props,
     children: []
@@ -194,7 +196,7 @@ function parseAttributes(context) {
     advanceSpaces()
 
     props.push({
-      type: 'Attribute',
+      type: NodeTypes.ATTRIBUTE,
       name,
       value,
       isStatic,
@@ -231,7 +233,7 @@ function parseText(context) {
   context.advanceBy(content.length)
 
   return {
-    type: 'Text',
+    type: NodeTypes.TEXT,
     content
   }
 }

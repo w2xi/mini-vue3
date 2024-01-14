@@ -1,3 +1,4 @@
+import { NodeTypes } from './ast.js'
 import {
   CREATE_ELEMENT_VNODE,
   helperNameMap,
@@ -27,16 +28,16 @@ export function generate(ast) {
  */
 function genNode(node, context) {
   switch (node.type) {
-    case 'Interpolation':
+    case NodeTypes.INTERPOLATION:
       genInterpolation(node, context)
       break
-    case 'Expression':
+    case NodeTypes.SIMPLE_EXPRESSION:
       genExpression(node, context)
       break
-    case 'Element':
+    case NodeTypes.ELEMENT:
       genElement(node, context)
       break
-    case 'Text':
+    case NodeTypes.TEXT:
       genText(node, context)
       break
     // case 'FunctionDecl':

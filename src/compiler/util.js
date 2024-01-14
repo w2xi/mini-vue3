@@ -1,3 +1,5 @@
+import { NodeTypes } from "./ast"
+
 /**
  * 判断是否是字母
  * @param {String} char
@@ -14,9 +16,9 @@ export function isAlpha(char) {
 export function dump(node, indent = 0) {
   const type = node.type
   const desc =
-    node.type === 'Root'
+    node.type === NodeTypes.ROOT
       ? ''
-      : node.type === 'Element'
+      : node.type === NodeTypes.ELEMENT
       ? node.tag
       : node.content
   // 打印节点的类型和描述信息

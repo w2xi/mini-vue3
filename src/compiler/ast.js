@@ -1,10 +1,17 @@
-export function createVNodeCall(context, tag, props, children) {
-  if (context) {
-    // context.helper(CREATE_ELEMENT_VNODE);
-  }
+export const NodeTypes = {
+  // AST
+  ROOT: 'ROOT',
+  ELEMENT: 'ELEMENT',
+  TEXT: 'TEXT',
+  SIMPLE_EXPRESSION: 'SIMPLE_EXPRESSION',
+  INTERPOLATION: 'INTERPOLATION',
+  ATTRIBUTE: 'ATTRIBUTE',
+  DIRECTIVE: 'DIRECTIVE',
+}
 
+export function createVNodeCall(type, tag, props, children) {
   return {
-    type: 'Element',
+    type,
     tag,
     props,
     children
