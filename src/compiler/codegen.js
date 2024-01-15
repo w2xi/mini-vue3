@@ -14,11 +14,46 @@ export function generate(ast) {
   // 创建上下文
   const context = createCodegenContext()
   genCode(ast.codegenNode, context)
-  // genNode(node, context)
 
   return {
     code: context.code // 渲染函数代码
   }
+}
+
+/**
+ * 以渲染函数为例，生成类似 `function render(...)  { return ... }` 代码字符串
+ with(ctx) {...}
+ * @param {Object} node JS AST
+ * @param {Object} context
+ */
+ function genCode(node, context) {
+  // 工具函数
+  const { push, indent, deIndent } = context
+  const fnName = 'render'
+  const args = ['_ctx', 'config']
+  const signature = args.join(', ')
+
+  // 用于最后将代码字符串转为函数
+  // new Function(code)
+  push(`return `)
+  push(`function ${fnName}(`)
+
+  // 生成函数参数代码字符串
+  // genNodeList(node.params, context)
+  push(signature)
+  push(`) `)
+  push(`{`)
+  // 缩进
+  indent()
+  push(`const { h, _toDisplayString } = config`)
+  indent()
+  push(`return `)
+  // 为函数体生成代码，这里递归地调用 genNode 函数
+  // node.body.forEach(n => genNode(n, context))
+  genNode(node, context)
+  // 取消缩进
+  deIndent()
+  push(`}`)
 }
 
 /**
@@ -68,7 +103,6 @@ function genElement(node, context) {
   } else {
     push('null')
   }
-  // genNodeList([tag, props, children], context)
   push(`)`)
 }
 
@@ -131,42 +165,6 @@ function genExpression(node, context) {
 }
 
 /**
- * 以渲染函数为例，生成类似 `function render(...)  { return ... }` 代码字符串
- with(ctx) {...}
- * @param {Object} node JS AST
- * @param {Object} context
- */
-function genCode(node, context) {
-  // 工具函数
-  const { push, indent, deIndent } = context
-  const fnName = 'render'
-  const args = ['_ctx', 'config']
-  const signature = args.join(', ')
-
-  // 用于最后将代码字符串转为函数
-  // new Function(code)
-  push(`return `)
-  push(`function ${fnName}(`)
-
-  // 生成函数参数代码字符串
-  // genNodeList(node.params, context)
-  push(signature)
-  push(`) `)
-  push(`{`)
-  // 缩进
-  indent()
-  push(`const { h, _toDisplayString } = config`)
-  indent()
-  push(`return `)
-  // 为函数体生成代码，这里递归地调用 genNode 函数
-  // node.body.forEach(n => genNode(n, context))
-  genNode(node, context)
-  // 取消缩进
-  deIndent()
-  push(`}`)
-}
-
-/**
  * 生成数组表达式
  * @param {Object} node
  * @param {Object} context
@@ -181,35 +179,9 @@ function genArrayExpression(node, context) {
 }
 
 /**
- * 生成调用表达式代码
- * @param {*} node
- * @param {*} context
- * @example
- *
- * h('p', 'Vue')
- */
-function genCallExpression(node, context) {
-  const { push } = context
-  // 获取调用函数名称和参数列表
-  const { callee, arguments: args } = node
-  // 生成函数调用名称
-  push(`${callee.name}(`)
-  // 生成参数代码
-  genNodeList(args, context)
-  // 补全括号
-  push(`)`)
-}
-
-/**
+ * 生成节点列表
  * @param {Array} nodes
  * @param {Object} context
- * @example
- *
- * const nodes = ['节点1', '节点2', '节点3']
- * => 生成的字符串为
- * '节点1, 节点2, 节点3'
- * 如果在这段代码前后添加圆括号，那么就可以用于函数的参数声明: ('节点1, 节点2, 节点3')
- * 如果在这段代码前后添加方括号，那么它就是一个数组: ['节点1, 节点2, 节点3']
  */
 function genNodeList(nodes, context) {
   const { push } = context
