@@ -40,27 +40,6 @@ function genNode(node, context) {
     case NodeTypes.TEXT:
       genText(node, context)
       break
-    // case 'FunctionDecl':
-    //   genFunctionDecl(node, context)
-    //   break
-    // case 'ReturnStatement':
-    //   genReturnStatement(node, context)
-    //   break
-    // case 'CallExpression':
-    //   genCallExpression(node, context)
-    //   break
-    // case 'StringLiteral':
-    //   genStringLiteral(node, context)
-    //   break
-    // case 'ArrayExpression':
-    //   genArrayExpression(node, context)
-    //   break
-    // case 'Interpolation':
-    //   genInterpolation(node, context)
-    //   break
-    // case 'Expression':
-    //   genExpression(node, context)
-    //   break
   }
 }
 

@@ -51,6 +51,12 @@ function traverseNode(ast, context) {
   }
 }
 
+/**
+ * 创建 transform 上下文
+ * @param {*} root 
+ * @param {*} options
+ * @returns 
+ */
 function createTransformContext(
   root,
   { nodeTransforms = [] }
@@ -60,6 +66,7 @@ function createTransformContext(
     currentNode: null,
     // 当前节点在父节点的 children 中的位置索引
     childIndex: 0,
+    root,
     // 当前转换节点的父节点
     parent: null,
     // 用于替换节点的函数，接收新节点作为参数
@@ -100,27 +107,5 @@ function createRootCodegen(root) {
     // ...
   } else {
     // no children
-  }
-}
-
-function createIdentifier(name) {
-  return {
-    type: 'Identifier',
-    name
-  }
-}
-
-function createArrayExpression(elements) {
-  return {
-    type: 'ArrayExpression',
-    elements
-  }
-}
-
-function createCallExpression(callee, args) {
-  return {
-    type: 'CallExpression',
-    callee: createIdentifier(callee),
-    arguments: args
   }
 }
