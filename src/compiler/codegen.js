@@ -30,7 +30,7 @@ export function generate(ast) {
   // 工具函数
   const { push, indent, deIndent } = context
   const fnName = 'render'
-  const args = ['_ctx', 'config']
+  const args = ['_ctx']
   const signature = args.join(', ')
 
   // 用于最后将代码字符串转为函数
@@ -45,7 +45,7 @@ export function generate(ast) {
   push(`{`)
   // 缩进
   indent()
-  push(`const { h, _toDisplayString } = config`)
+  push(`const { h, toDisplayString: _toDisplayString } = MiniVue`)
   indent()
   push(`return `)
   // 为函数体生成代码，这里递归地调用 genNode 函数

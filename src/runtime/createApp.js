@@ -16,7 +16,7 @@ export function createApp(options = {}) {
       const data = proxyRefs(setupFn())
 
       const reload = () => {
-        const vnode = render(data, { h, _toDisplayString: function toString(val) { return val && val.toString() } })      
+        const vnode = render(data)      
         container.innerHTML = ''
         _mount(vnode, container)
       }
