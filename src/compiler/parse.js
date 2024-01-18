@@ -98,7 +98,7 @@ function parseChildren(context, ancestors = []) {
   let removeWhitespace = false; // 标记是否需要移除节点
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
-    if (node.type === 'TEXT') {
+    if (node.type === NodeTypes.TEXT) {
       // 如果是文本节点
       if (!/[^\t\r\n\f ]/.test(node.content)) {
         // 匹配 `\t\r\n\f `
@@ -108,8 +108,8 @@ function parseChildren(context, ancestors = []) {
         if (
           !prev ||
           !next ||
-          (prev.type === 'Element' &&
-            next.type === 'Element' &&
+          (prev.type === NodeTypes.ELEMENT &&
+            next.type === NodeTypes.ELEMENT &&
             /[\r\n]/.test(node.content))
         ) {
           // 处理第一个 或 最后一个 或 连续多个 或 夹在中间的空白符文本节点
