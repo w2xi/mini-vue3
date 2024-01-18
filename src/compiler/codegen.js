@@ -4,6 +4,7 @@ import {
   helperNameMap,
   TO_DISPLAY_STRING
 } from './runtimeHelpers.js'
+import { isString } from '../utils/index.js'
 
 /**
  * 代码生成
@@ -188,7 +189,7 @@ function genNodeList(nodes, context) {
 
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i]
-    if (typeof node === 'string') {
+    if (isString(node)) {
       push(`'${node}'`)
     } else {
       genNode(node, context)

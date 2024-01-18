@@ -1,7 +1,6 @@
 import { compileToFunction } from '../compiler/compile.js'
 import { effect } from '../reactivity/effect.js'
 import { proxyRefs } from '../reactivity/ref.js'
-import { h } from './h.js'
 import { isString } from "../utils/index.js"
 
 export function createApp(options = {}) {

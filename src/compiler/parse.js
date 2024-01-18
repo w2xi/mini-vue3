@@ -59,7 +59,75 @@ function parseChildren(context, ancestors = []) {
     nodes.push(node)
   }
 
-  return nodes
+  /**
+   * 举例:
+   * const template = `
+   *    <div>
+   *      <p>Template</p>
+   *    </div>
+   * `
+   * => ast
+   * {
+        "type": "Root",
+        "children": [
+          { "type": "Text", "content": "\n  "},
+          {
+            "type": "Element",
+            "tag": "div",
+            "props": [],
+            "children": [
+              { "type": "Text", "content": "\n    " },
+              {
+                "type": "Element",
+                "tag": "p",
+                "props": [],
+                "children": [
+                  { "type": "Text", "content": "Template" }
+                ]
+              },
+              { "type": "Text", "content": "\n  " }
+            ]
+          },
+          { "type": "Text", "content": "\n" }
+        ]
+      }
+   * 
+   */
+
+  // whitespace handling strategy
+  let removeWhitespace = false; // 标记是否需要移除节点
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
+    if (node.type === 'TEXT') {
+      // 如果是文本节点
+      if (!/[^\t\r\n\f ]/.test(node.content)) {
+        // 匹配 `\t\r\n\f `
+        const prev = nodes[i - 1];
+        const next = nodes[i + 1];
+
+        if (
+          !prev ||
+          !next ||
+          (prev.type === 'Element' &&
+            next.type === 'Element' &&
+            /[\r\n]/.test(node.content))
+        ) {
+          // 处理第一个 或 最后一个 或 连续多个 或 夹在中间的空白符文本节点
+
+          removeWhitespace = true;
+          nodes[i] = null;
+        } else {
+          node.content = ' ';
+        }
+      } else {
+        // 将多个空格，换行等 替换为一个空字符串
+        // 比如: `   abc   ` => ' abc '
+        node.content = node.content.replace(/[\t\r\f\n ]+/g, ' ');
+      }
+    }
+  }
+
+  return removeWhitespace ? nodes.filter(Boolean) : nodes;
 }
 
 /**
