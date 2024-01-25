@@ -43,14 +43,10 @@ function _mount(vnode, container) {
       }
   }
   if (Array.isArray(vnode.children)) {
-    if (vnode.children.length === 1 && typeof vnode.children[0] != 'object') {
-      el.textContent = vnode.children[0]
-    } else {
-      vnode.children.forEach(child => {
-          _mount(child, el)
-      })
-    }
-  } else { // string
+    vnode.children.forEach(child => {
+        _mount(child, el)
+    })
+  } else { // text node
       el.textContent = vnode.children
   }
 

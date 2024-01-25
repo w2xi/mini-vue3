@@ -94,7 +94,7 @@ function genElement(node, context) {
   // push(`${helper(CREATE_ELEMENT_VNODE)}('${tag}', `)
   push(`h('${tag}', `)
 
-  if (props) {
+  if (props && props.length > 0) {
     genProps(props, context)
   } else {
     push('null, ')
@@ -137,7 +137,17 @@ function genProps(props, context) {
 }
 
 function genChildren(children, context) {
-  genArrayExpression(children, context)
+  // 处理子节点长度为 1 且是文本节点的情况
+  if (children.length === 1) {
+    const type = children[0].type
+    if (type === NodeTypes.TEXT) {
+      genText(children[0], context);
+    } else if (type === NodeTypes.INTERPOLATION) {
+      genInterpolation(children[0], context);
+    }
+  } else {
+    genArrayExpression(children, context);
+  }
 }
 
 function genText(node, context) {
