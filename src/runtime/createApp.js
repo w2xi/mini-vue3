@@ -1,7 +1,7 @@
 import { compileToFunction } from '../compiler/compile.js'
 import { effect } from '../reactivity/effect.js'
 import { proxyRefs } from '../reactivity/ref.js'
-import { isString } from "../utils/index.js"
+import { isString, isFunction } from "../utils/index.js"
 
 export function createApp(options = {}) {
   const app = {
@@ -10,7 +10,12 @@ export function createApp(options = {}) {
         container = document.querySelector(container)
       }
       const template = container.innerHTML
-      const render = compileToFunction(template)
+      let render
+      if (isFunction(options.render)) { // 用户自定义渲染函数
+        render = options.render
+      } else {
+        render = compileToFunction(template)
+      }
       const setupFn = options.setup || noop
       const data = proxyRefs(setupFn())
 
