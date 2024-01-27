@@ -24,10 +24,8 @@ export function baseCompile(template) {
       ]
     }
   )
-  // 生成渲染函数字符串 ( `return function render() {/*...*/}` )
-  const code = generate(ast)
-
-  return code
+  
+  return generate(ast)
 }
 
 /**
@@ -38,5 +36,9 @@ export function baseCompile(template) {
 export function compileToFunction(template) {
   const { code } = baseCompile(template)
   const render = new Function(code)()
-  return render
+
+  return {
+    code,
+    render,
+  }
 }

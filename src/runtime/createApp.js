@@ -14,7 +14,7 @@ export function createApp(options = {}) {
       if (isFunction(options.render)) { // 用户自定义渲染函数
         render = options.render
       } else {
-        render = compileToFunction(template)
+        ({ render } = compileToFunction(template))
       }
       const setupFn = options.setup || noop
       const data = proxyRefs(setupFn())

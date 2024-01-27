@@ -17,6 +17,7 @@ export function generate(ast) {
   genCode(ast.codegenNode, context)
 
   return {
+    ast,
     code: context.code // 渲染函数代码
   }
 }
