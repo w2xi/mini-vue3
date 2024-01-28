@@ -1,0 +1,51 @@
+<style>
+.red { color: red; }
+</style>
+
+<body>
+  <div id="app"></div>
+</body>
+
+<script>
+function h(tag, props, children) {
+  return {
+    tag,
+    props,
+    children,
+  }
+}
+
+function mount(vnode, container) {
+  const el = document.createElement(vnode.tag);
+  el.parent = container
+  // handle props
+  if (vnode.props) {
+    for (let key in vnode.props) {
+        if (key.startsWith('on')) { // 事件绑定
+        const eventName = key.slice(2).toLowerCase();
+        el.addEventListener(eventName, vnode.props[key]);
+      } else {
+        el.setAttribute(key, vnode.props[key]);
+      }
+    }
+  }
+  // handle children
+  if (vnode.children) {
+    if (Array.isArray(vnode.children)) {
+      vnode.children.forEach(child => {
+        mount(child, el);
+      });
+    } else { // text node
+      el.textContent = vnode.children;
+    }
+  }
+
+  container.appendChild(el);
+}
+
+const vdom = h('div', { class: 'red' }, [
+  h('span', null, 'hello')
+])
+
+mount(vdom, document.getElementById('app'))
+</script>

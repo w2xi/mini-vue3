@@ -1,6 +1,7 @@
 import { compileToFunction } from '../compiler/compile.js'
 import { effect } from '../reactivity/effect.js'
 import { proxyRefs } from '../reactivity/ref.js'
+import { patch } from './patch.js'
 import { isString, isFunction } from "../utils/index.js"
 
 export function createApp(options = {}) {
@@ -19,10 +20,16 @@ export function createApp(options = {}) {
       const setupFn = options.setup || noop
       const data = proxyRefs(setupFn())
 
+      let oldVNode
       const reload = () => {
-        const vnode = render(data)      
-        container.innerHTML = ''
-        _mount(vnode, container)
+        const vnode = render(data)
+        if (oldVNode) {
+          vnode.el = patch(oldVNode, vnode)
+        } else {
+          container.innerHTML = ''
+          _mount(vnode, container)
+        }
+        oldVNode = vnode
       }
 
       effect(() => {
@@ -35,25 +42,27 @@ export function createApp(options = {}) {
 }
 
 function _mount(vnode, container) {
-  const el = document.createElement(vnode.tag)
-
+  const el = vnode.el = document.createElement(vnode.tag)
+  // handle props
   if (vnode.props) {
-      for (let key in vnode.props) {
-          if (key.startsWith('on')) { // 事件绑定
-              const eventName = key.slice(2).toLowerCase()
-              el.addEventListener(eventName, vnode.props[key])
-          } else {
-              el.setAttribute(key, vnode.props[key])
-          }
+    for (let key in vnode.props) {
+        if (key.startsWith('on')) { // 事件绑定
+        const eventName = key.slice(2).toLowerCase()
+        el.addEventListener(eventName, vnode.props[key])
+      } else {
+        el.setAttribute(key, vnode.props[key])
       }
+    }
   }
-  if (Array.isArray(vnode.children)) {
-    vnode.children.forEach(child => {
+  // handle children
+  if (vnode.children) {
+    if (Array.isArray(vnode.children)) {
+      vnode.children.forEach(child => {
         _mount(child, el)
-    })
-  } else { // text node
+      })
+    } else { // text node
       el.textContent = vnode.children
+    }
   }
-
   container.appendChild(el)
 }
