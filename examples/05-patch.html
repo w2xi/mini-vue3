@@ -18,7 +18,7 @@
   
   function mount(vnode, container) {
     const el = vnode.el = document.createElement(vnode.tag);
-    el.parent = container
+    vnode.parent = container
     // handle props
     if (vnode.props) {
       for (let key in vnode.props) {
@@ -107,13 +107,12 @@
         }
       }
     } else {
-      // ...
+      // ... replace
   
       // unmount old dom
       n1.parent.removeChild(n1.el)
       // mount new dom
-      const el = n2.el = document.createElement(n2.tag)
-      n1.parent.appendChild(el)
+      mount(n2, n1.parent)
     }
   }
   

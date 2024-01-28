@@ -60,13 +60,12 @@ export function patch(n1, n2) {
       }
     }
   } else {
-    // ...
-
+    // ... replace
+  
     // unmount old dom
     n1.parent.removeChild(n1.el)
     // mount new dom
-    const el = n2.el = document.createElement(n2.tag)
-    n1.parent.appendChild(el)
+    mount(n2, n1.parent)
   }
 
   return n1.el
