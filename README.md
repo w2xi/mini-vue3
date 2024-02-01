@@ -14,11 +14,11 @@
     - [x] 解析模板器 parser
     - [x] 转换器 transform
     - [x] 代码生成 codegen
-    - [x] compileToFunction (生成渲染函数)
+    - [x] 编译 compile
 - 挂载
 - 更新 (简单的 patch diff)
 
-## Counter demo
+## Counter 计数器 demo
 
 ```html
  <div id="app">
